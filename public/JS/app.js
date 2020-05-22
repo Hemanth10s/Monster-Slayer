@@ -93,7 +93,7 @@ new Vue({
             return false
         },
         getTitle:async function(){
-            let res= await axios.get("http://localhost:3000/title");
+            let res= await axios.get("https://monster--slayer.herokuapp.com/title");
             console.log(res.data)
             this.title=res.data.title
             this.name=res.data.name
