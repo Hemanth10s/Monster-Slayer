@@ -1,10 +1,17 @@
+
+
 new Vue({
     el:'#app',
     data:{
         playerHealth:100,
         monsterHealth:100,
         isGame:false,
-        turns:[]
+        turns:[],
+        title:'',
+        name:'',
+        st:0
+    },created:function(){
+        this.getTitle()
     },
     methods:{
         monsterAttacks:function(){
@@ -21,8 +28,10 @@ new Vue({
             this.monsterHealth=100
             this.playerHealth=100
             this.turns=[]
+            this.st=0
         },
         attack:function(){
+            
             var damage=this.calculateDamage(3,10)
             this.monsterHealth-=damage
             this.turns.unshift({
@@ -35,16 +44,20 @@ new Vue({
             this.monsterAttacks()
         },
         specialAttack:function(){
+            this.st+=1
             var damage=this.calculateDamage(10,20)
             this.monsterHealth-=damage
             this.turns.unshift({
                 isPlayer:true,
-                text:'Player hits Monster for '+ damage
+                text:'Player hits Monster hard for '+ damage
             })
             if(this.checkWin()){
                 return;
             }
             this.monsterAttacks()
+            if(this.st===2){
+                document.getElementById('special-attack').disabled=true
+            }
         },
         heal:function(){
             this.playerHealth=(this.playerHealth<=90)?this.playerHealth+10:100
@@ -78,6 +91,12 @@ new Vue({
                 return true
             }
             return false
+        },
+        getTitle:async function(){
+            let res= await axios.get("http://localhost:3000/title");
+            console.log(res.data)
+            this.title=res.data.title
+            this.name=res.data.name
         }
     }
 })
